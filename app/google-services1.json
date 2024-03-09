@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "567385260515",
+    "firebase_url": "https://baza-de-date-b318f-default-rtdb.firebaseio.com",
+    "project_id": "baza-de-date-b318f",
+    "storage_bucket": "baza-de-date-b318f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:567385260515:android:3a320a623c78f7de76a0d6",
+        "android_client_info": {
+          "package_name": "com.example.shortmeal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "567385260515-268cvd2vv5eqsoqpm2e8ls5bonaconpj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-esN80fBqRPmrcisy-bCMIpbWJZIaoLk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "567385260515-268cvd2vv5eqsoqpm2e8ls5bonaconpj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
