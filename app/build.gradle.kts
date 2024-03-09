@@ -61,7 +61,6 @@ dependencies {
     implementation(libs.ui)
     implementation(libs.ui.graphics)
     implementation(libs.ui.tooling.preview)
-    implementation(libs.material3)
     implementation(libs.firebase.auth)
     implementation("androidx.camera:camera-camera2:1.0.1")
     implementation("androidx.camera:camera-lifecycle:1.0.1")
@@ -98,9 +97,7 @@ dependencies {
     androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(libs.ui.test.junit4)
     androidTestImplementation(platform(libs.compose.bom))
-    androidTestImplementation(platform(libs.compose.bom))
-    androidTestImplementation(platform(libs.compose.bom))
-    androidTestImplementation(platform(libs.compose.bom))
+
     debugImplementation(libs.ui.tooling)
     debugImplementation(libs.ui.test.manifest)
     implementation(platform("com.google.firebase:firebase-bom:32.7.3"))
