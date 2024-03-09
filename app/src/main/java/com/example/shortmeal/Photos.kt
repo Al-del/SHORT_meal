@@ -7,6 +7,7 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.util.Log
+import android.widget.Toast
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
@@ -34,20 +35,20 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
-import com.google.firebase.Firebase
-import com.google.firebase.database.database
-import java.io.File
-import java.text.SimpleDateFormat
-import java.util.Locale
-import java.util.concurrent.Executor
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
+import com.google.firebase.storage.FirebaseStorage
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.asRequestBody
+import java.io.File
 import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.Locale
+import java.util.UUID
+import java.util.concurrent.Executor
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 private fun takePhoto(
     context: Context,
@@ -57,7 +58,8 @@ private fun takePhoto(
     executor: Executor,
     onImageCaptured: (Uri) -> Unit,
     onError: (ImageCaptureException) -> Unit,
-    user: String
+    user: String,
+    act:Int
 ) {
 
     val photoFile = File(
@@ -80,13 +82,30 @@ private fun takePhoto(
             val imageBitmap = BitmapFactory.decodeFile(savedUri.path)
             //print the shape of the image
             Log.i("kilo", "Image saved: ${imageBitmap.width} x ${imageBitmap.height}")
-            val clasS=ImageClassifier(context)
-         var class_pred=clasS.classify(imageBitmap)
-             //Go to Recepies activity
-            val intent = Intent(context, Recepies::class.java)
-            intent.putExtra("recepie", class_pred)
-            intent.putExtra("username", user)
-            context.startActivity(intent)
+            if(act==1) {
+                val clasS = ImageClassifier(context)
+                var class_pred = clasS.classify(imageBitmap)
+                //Go to Recepies activity
+                val intent = Intent(context, Recepies::class.java)
+                intent.putExtra("recepie", class_pred)
+                intent.putExtra("username", user)
+                context.startActivity(intent)
+            }
+            else{
+//TO DO
+                //Push the photo to firebase as an url
+                uploadImageToFirebase(photoFile,user, onSuccess = {
+                    Log.i("kilo", "Image uploaded to Firebase: $it")
+                }, onFailure = {
+                    Log.e("kilo", "Image upload to Firebase error:", it)
+                })
+                (context as Activity).runOnUiThread {
+                    Toast.makeText(context, "Photo added", Toast.LENGTH_SHORT).show()
+                }
+                val intent = Intent(context, Profilus::class.java)
+                intent.putExtra("username", user)
+                context.startActivity(intent)
+            }
 
         }
     })
@@ -104,7 +123,8 @@ fun CameraView(
     executor: Executor,
     onImageCaptured: (Uri) -> Unit,
     onError: (ImageCaptureException) -> Unit,
-    username: String
+    username: String,
+    act:Int
 ) {
     // 1
     val lensFacing = CameraSelector.LENS_FACING_BACK
@@ -144,7 +164,8 @@ fun CameraView(
                     executor = executor,
                     onImageCaptured = onImageCaptured,
                     onError = onError,
-                    user=username
+                    user=username,
+                    act=act
                 )
             },
             content = {
@@ -190,5 +211,21 @@ fun uploadImageToServer(imageUri: Uri, serverUrl: String) {
     client.newCall(request).execute().use { response ->
         if (!response.isSuccessful) throw IOException("Unexpected code $response")
         println(response.body?.string())
+    }
+}
+
+
+fun uploadImageToFirebase(imageFile: File,usernamusss:String, onSuccess: (String) -> Unit, onFailure: (Exception) -> Unit) {
+    val storageRef = FirebaseStorage.getInstance().reference
+    val uniqueID = UUID.randomUUID().toString()
+    val imageRef = storageRef.child("images/$usernamusss.jpg")
+
+    val uploadTask = imageRef.putFile(Uri.fromFile(imageFile))
+    uploadTask.addOnSuccessListener {
+        imageRef.downloadUrl.addOnSuccessListener { uri ->
+            onSuccess(uri.toString())
+        }
+    }.addOnFailureListener { exception ->
+        onFailure(exception)
     }
 }

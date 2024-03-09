@@ -130,20 +130,20 @@ fun FoodList(foodList: List<FoodPair>, lifecycleScope: LifecycleCoroutineScope,c
                                     item.first
                                 )
                             }
-                            val obj_d=  withContext(Dispatchers.IO) {
+                            val obj_d = withContext(Dispatchers.IO) {
                                 getSpoonacularRecipes(
                                     "5df674c4fc0242e38d2d0dd5cd94ffac",
                                     recipeUrl.toString(),
                                     recepie_Name = item.first
                                 )
                             }
-                            Log.d("kilo", "obj_d is: ${obj_d.title.toString()}")
+                            Log.d("kilo", "obj_d is: ${obj_d.instructions.toString()}")
                             val intent = Intent(context, Recepie_idk::class.java)
-                            intent.putExtra("title",obj_d.title)
-                            intent.putExtra("image",obj_d.image)
-                            intent.putExtra("ingredients",obj_d.ingredients.toString())
-                            intent.putExtra("video",obj_d.video)
-                            intent.putExtra("instrutions",obj_d.instructions)
+                            intent.putExtra("title", obj_d.title)
+                            intent.putExtra("image", obj_d.image)
+                            intent.putExtra("ingredients", obj_d.ingredients.toString())
+                            intent.putExtra("video", obj_d.video)
+                            intent.putExtra("instrutions", obj_d.instructions)
                             context.startActivity(intent)
                         }
                     }, style = MaterialTheme.typography.displayMedium)
@@ -231,13 +231,15 @@ suspend fun getSpoonacularRecipes(apiKey: String, urlus: String, numResults: Int
         val instructions = jsonData?.getString("instructions")
         Log.d("kilo", "Title is: $title")
         Log.d("kilo", "Image is: $image")
-        Log.d("kilo", "Instructions are: $instructions")
+        Log.d("kilo", "Instructions are: ${jsonData?.getString("instructions")}")
         Log.d("kilo", "Ingredients are: $ingredients")
+
         val recipe = Show_recpie()
         recipe.title = title
         recipe.image = image
         recipe.ingredients = ingredients_list
         recipe.instructions = instructions
+        Log.d("kilo", "Ingredients arelo: ${recipe.instructions}")
         /* TO DO  get a video*/
         // Return the response as a string
         val a = recepie_Name?.let { getSpoonacularRecipeVideo(apiKey, it) }

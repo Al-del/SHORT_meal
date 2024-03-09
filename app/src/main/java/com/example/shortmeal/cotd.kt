@@ -1,4 +1,5 @@
 package com.example.shortmeal
+
 import android.Manifest
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -10,17 +11,21 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import coil.compose.rememberImagePainter
+import com.example.shortmeal.ui.theme.SHORTMealTheme
 import java.io.File
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-class Main : ComponentActivity() {
+class cotd : ComponentActivity() {
     private lateinit var outputDirectory: File
     private lateinit var cameraExecutor: ExecutorService
     private lateinit var photoUri: Uri
@@ -95,7 +100,7 @@ class Main : ComponentActivity() {
                             onImageCaptured = ::handleImageCapture,
                             onError = { Log.e("kilo", "View error:", it) },
                             username= user_name,
-                            act=1
+                            act=2
                         )
                     }else{
                         CameraView(
@@ -104,7 +109,7 @@ class Main : ComponentActivity() {
                             onImageCaptured = ::handleImageCapture,
                             onError = { Log.e("kilo", "View error:", it) },
                             username= "Cuza",
-                            act=1
+                            act=2
                         )
                     }
                 }
@@ -123,5 +128,21 @@ class Main : ComponentActivity() {
 
             }
         }
+    }
+}
+
+@Composable
+fun Greeting(name: String, modifier: Modifier = Modifier) {
+    Text(
+        text = "Hello $name!",
+        modifier = modifier
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun GreetingPreview() {
+    SHORTMealTheme {
+        Greeting("Android")
     }
 }

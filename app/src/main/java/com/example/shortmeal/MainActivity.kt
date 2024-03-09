@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.Facebook
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults.buttonColors
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuDefaults.textFieldColors
 import androidx.compose.material3.Icon
@@ -42,7 +43,6 @@ import androidx.compose.ui.unit.sp
 import com.google.firebase.Firebase
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.database
-import androidx.compose.material3.ButtonDefaults.buttonColors
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,7 +66,8 @@ data class USR(
     var username: String?="",
     var password: String?="",
     //List of string
-    var list: List<FoodPair>?
+    var list: List<FoodPair>?,
+    var score:Int=0
 )
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

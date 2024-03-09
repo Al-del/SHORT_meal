@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,17 +19,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ListItem
 import androidx.compose.material.ModalDrawer
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -43,10 +39,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import androidx.compose.material3.rememberDrawerState
-import androidx.navigation.compose.rememberNavController
 
 class profil {
     var scor: Int =0
@@ -103,7 +98,9 @@ class Short_Meal_obj {
                                 intent.putExtra("username", username)
                                 context.startActivity(intent)
                             },
-                            modifier = Modifier.height(50.dp).width(150.dp),
+                            modifier = Modifier
+                                .height(50.dp)
+                                .width(150.dp),
                             shape = RoundedCornerShape(15.dp)
                         ) {
                             Text(text = "Recipes")
@@ -114,7 +111,9 @@ class Short_Meal_obj {
                                 context.startActivity(Intent(context, Forumus::class.java))
                                 (context as Activity).finish()
                             },
-                            modifier = Modifier.height(50.dp).width(150.dp),
+                            modifier = Modifier
+                                .height(50.dp)
+                                .width(150.dp),
                             shape = RoundedCornerShape(15.dp)
                         ) {
                             Text(text = "Forum")
@@ -126,7 +125,9 @@ class Short_Meal_obj {
                                 intent.putExtra("username", username)
                                 context.startActivity(intent)
                             },
-                            modifier = Modifier.height(50.dp).width(150.dp),
+                            modifier = Modifier
+                                .height(50.dp)
+                                .width(150.dp),
                             shape = RoundedCornerShape(15.dp)
                         ) {
                             Text(text = "Profile")
@@ -139,7 +140,9 @@ class Short_Meal_obj {
                                 intent.putExtra("username", username)
                                 context.startActivity(intent)
                             },
-                            modifier = Modifier.height(50.dp).width(150.dp),
+                            modifier = Modifier
+                                .height(50.dp)
+                                .width(150.dp),
                             shape = RoundedCornerShape(15.dp)
                         ) {
                             Text(text = "Friends")
@@ -151,10 +154,25 @@ class Short_Meal_obj {
                                 intent.putExtra("username", username)
                                 context.startActivity(intent)
                             },
-                            modifier = Modifier.height(50.dp).width(150.dp),
+                            modifier = Modifier
+                                .height(50.dp)
+                                .width(150.dp),
                             shape = RoundedCornerShape(15.dp)
                         ) {
                             Text(text = "Video pred etc")
+                        }
+                        Spacer(modifier = Modifier.padding(vertical = 4.dp))
+                        Button(onClick ={
+                            val intent = Intent(context, cotd::class.java)
+                            intent.putExtra("username", username)
+                            context.startActivity(intent)
+                        },
+                            modifier = Modifier
+                                .height(50.dp)
+                                .width(150.dp),
+                            shape = RoundedCornerShape(15.dp)
+                            ) {
+                        Text(text="COTD")
                         }
                         Spacer(modifier = Modifier.padding(vertical = 4.dp))
                         Button(
@@ -162,7 +180,9 @@ class Short_Meal_obj {
                                 val intent = Intent(context, MainActivity::class.java)
                                 context.startActivity(intent)
                             },
-                            modifier = Modifier.height(50.dp).width(150.dp),
+                            modifier = Modifier
+                                .height(50.dp)
+                                .width(150.dp),
                             shape = RoundedCornerShape(15.dp)
                         ) {
                             Text(text = "Logout")
