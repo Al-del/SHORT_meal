@@ -4,18 +4,26 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowUpward
+import androidx.compose.material.icons.filled.Facebook
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults.buttonColors
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuDefaults.textFieldColors
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -25,15 +33,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.firebase.Firebase
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.database
-
+import androidx.compose.material3.ButtonDefaults.buttonColors
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,62 +73,83 @@ data class USR(
 fun LoginScreen(databaseReference: DatabaseReference) {
     val username = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
+    val passwordVisibility = remember { mutableStateOf(false) }
+
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Column {
-            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+            Image(
+                painter = painterResource(id = R.drawable.logo_short_meal), // replace with your logo resource
+                contentDescription = "App Logo",
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
+
+            Spacer(modifier = Modifier.height(16.dp)) // Add a spacer
+
+            TextField(
+                value = username.value,
+                onValueChange = { username.value = it },
+                label = { Text("Username") },
+                colors = textFieldColors(Color.Magenta) // Change the color of the TextField
+            )
+
+            Spacer(modifier = Modifier.height(16.dp)) // Add a spacer
+
+            TextField(
+                value = password.value,
+                onValueChange = { password.value = it },
+                label = { Text("Password") },
+                visualTransformation = if (passwordVisibility.value) VisualTransformation.None else PasswordVisualTransformation(),
+                trailingIcon = {
+                    IconButton(onClick = { passwordVisibility.value = !passwordVisibility.value }) {
+                        Icon(
+                            imageVector = if (passwordVisibility.value) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
+                            contentDescription = "Toggle password visibility"
+                        )
+                    }
+                },
+                colors = textFieldColors(Color.Magenta) // Change the color of the TextField
+            )
+
+            Spacer(modifier = Modifier.height(16.dp)) // Add a spacer
+
+            Text(
+                text = "Forgot Password",
+                color = Color.Blue,
+                modifier = Modifier.align(Alignment.CenterHorizontally).clickable { /* Handle forgot password here */ }
+            )
+
+            Spacer(modifier = Modifier.height(16.dp)) // Add a spacer
+
+            Button(
+                onClick = {
+                    // Read from the database
+                    var list: List<FoodPair>? = null
+                    //add an element to the list
+                    list = listOf(FoodPair("null", "nullus"))
+                    var ok= USR(username.value, password.value, list)
+                    val userRef = databaseReference.child(username.value)
+                    userRef.setValue(ok)
+                },
+                modifier = Modifier
+                    .height(50.dp) // Set the height of the button
+                    .width(200.dp) // Set the width of the button
+                    .align(Alignment.CenterHorizontally),
+                colors = buttonColors(Color.Blue) // Change the background color of the button
+            ) {
                 Text(
-                    text = "Register",
-                    fontSize = 24.sp,
-                    textAlign = TextAlign.Center
-                )
-            }
-            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                TextField(
-                    value = username.value,
-                    onValueChange = { username.value = it },
-                    label = { Text("Username") },
-                    colors = textFieldColors(Color(0xFF90FFDC)) // Set the color of the TextField
-
+                    text = "Login",
+                    color = Color.White // Change the color of the text
                 )
             }
 
             Spacer(modifier = Modifier.height(16.dp)) // Add a spacer
 
-            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                TextField(
-                    value = password.value,
-                    onValueChange = { password.value = it },
-                    label = { Text("Password") },
-                    visualTransformation = PasswordVisualTransformation(),
-                    colors = textFieldColors(Color(0xFF90FFDC)) // Set the color of the TextField
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp)) // Add a spacer
-
-            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                Button(
-                    onClick = {
-                        // Read from the database
-                        var list: List<FoodPair>? = null
-                        //add an element to the list
-                        list = listOf(FoodPair("null", "nullus"))
-                       var ok= USR(username.value, password.value, list)
-                        val userRef = databaseReference.child(username.value)
-                        userRef.setValue(ok)
-                              },
-                    modifier = Modifier
-                        .height(50.dp) // Set the height of the button
-                        .width(200.dp), // Set the width of the button
-                    colors = buttonColors(Color(0xFF90FFDC)) // Set the background color of the button
-
-                ) {
-                    Text(
-                        text = "Username",
-                        color = Color(0xFF8AC4FF)
-                    )
-                }
-
+            Row(
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Icon(imageVector = Icons.Filled.Facebook, contentDescription = "Facebook")
+                Icon(imageVector = Icons.Filled.ArrowUpward, contentDescription = "Unknown")
             }
         }
     }

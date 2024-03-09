@@ -1,7 +1,6 @@
 package com.example .shortmeal
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -31,6 +30,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
+import com.example.shortmeal.FoodPair
+import com.example.shortmeal.Profilus
+import com.example.shortmeal.Short_Meal_obj
+import com.example.shortmeal.USR
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -93,7 +96,8 @@ class Recepies : ComponentActivity() {
                                                             this@Recepies,
                                                             usernamus=usernamuss,
                                                             food=recipe.title,
-                                                            img_url=recipe.imageUrl
+                                                            img_url=recipe.imageUrl,
+                                                            username = usernamuss
                                                         )
                                                     }else{
                                                         ShowNutritionAnalysis(
@@ -102,7 +106,8 @@ class Recepies : ComponentActivity() {
                                                             this@Recepies,
                                                             usernamus="unknown",
                                                             food=recipe.title,
-                                                            img_url=recipe.imageUrl
+                                                            img_url=recipe.imageUrl,
+                                                            username = usernamuss
                                                         )
                                                     }
                                                 }
@@ -128,9 +133,9 @@ class Recepies : ComponentActivity() {
                                 Button(
                                     onClick = {
 
-                                        //Go to the another activity
                                         val intent = Intent(this@Recepies, Profilus::class.java)
-                                        startActivity(intent)
+                                        intent.putExtra("username", usernamuss)
+                                        this@Recepies.startActivity(intent)
                                     },
                                     modifier = Modifier.align(Alignment.TopEnd)
                                 ) {
@@ -213,7 +218,7 @@ suspend fun getNutritionAnalysis(recipeId: String, context: Context): List<Pair<
     }
 }
 @Composable
-fun ShowNutritionAnalysis(nutritionAnalysis: List<Pair<String, String>>, navController: NavController,context: Context,usernamus:String,food:String,img_url: String) {
+fun ShowNutritionAnalysis(nutritionAnalysis: List<Pair<String, String>>, navController: NavController,context: Context,usernamus:String,food:String,img_url: String,username:String?) {
     Column {
         for (nutrient in nutritionAnalysis) {
             Text("${nutrient.first}: ${nutrient.second}")
@@ -221,8 +226,9 @@ fun ShowNutritionAnalysis(nutritionAnalysis: List<Pair<String, String>>, navCont
 
         Button(onClick = {
      //Go to Show_recipe
-            context.startActivity(Intent(context, Main::class.java))
-            (context as Activity).finish()
+            val intent = Intent(context, Profilus::class.java)
+            intent.putExtra("username", username)
+            context.startActivity(intent)
 
         }) {
             Text(text ="Back")

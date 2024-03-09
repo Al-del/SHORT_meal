@@ -5,34 +5,22 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.DrawerState
-import androidx.compose.material3.DrawerValue
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import coil.compose.rememberImagePainter
-import kotlinx.coroutines.launch
 import java.io.File
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import androidx.navigation.compose.rememberNavController
-import kotlinx.coroutines.CoroutineScope
 
 class Main : ComponentActivity() {
-    var obj = Short_Meal_obj()
-    var a = profil()
     private lateinit var outputDirectory: File
     private lateinit var cameraExecutor: ExecutorService
     private lateinit var photoUri: Uri
@@ -87,7 +75,6 @@ class Main : ComponentActivity() {
         super.onDestroy()
         cameraExecutor.shutdown()
     }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -99,36 +86,40 @@ class Main : ComponentActivity() {
             cameraExecutor = Executors.newSingleThreadExecutor()
         }
         setContent {
-            MainContent()
-        }
-    }
-
-    @Composable
-    fun MainContent() {
-        val user_name = intent.getStringExtra("username")
-        val navController = rememberNavController()
-
-        if (user_name != null) {
-            obj.ModalDrawerExample(
-                context = this@Main,
-                navController = navController,
-                username = user_name,
-                activityContentScope = { state: DrawerState, scope: CoroutineScope ->
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalAlignment = Alignment.End
-                    ) {
-                        BackHandler(
-                            enabled = state.currentValue != DrawerValue.Open,
-                            onBack = {
-                                scope.launch {
-                                    state.close()
-                                }
-                            }
+            Column {
+                if (shouldShowCamera.value) {
+                    if (user_name != null) {
+                        CameraView(
+                            outputDirectory = outputDirectory,
+                            executor = cameraExecutor,
+                            onImageCaptured = ::handleImageCapture,
+                            onError = { Log.e("kilo", "View error:", it) },
+                            username= user_name
+                        )
+                    }else{
+                        CameraView(
+                            outputDirectory = outputDirectory,
+                            executor = cameraExecutor,
+                            onImageCaptured = ::handleImageCapture,
+                            onError = { Log.e("kilo", "View error:", it) },
+                            username= "Cuza"
                         )
                     }
                 }
-            )
+
+                if (shouldShowPhoto.value) {
+                    Image(
+                        painter = rememberImagePainter(photoUri),
+                        contentDescription = null,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+
+
+
+
+
+            }
         }
     }
 }
