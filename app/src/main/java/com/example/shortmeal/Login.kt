@@ -71,7 +71,7 @@ fun LoginScreen_(databaseReference: DatabaseReference,context:Context) {
         if (loginSuccessful.value) {
             scope.launch {
                 Log.d("kilo", "Username ${username.value}")
-                val intent = Intent(context, Main::class.java)
+                val intent = Intent(context, Profilus::class.java)
                 intent.putExtra("username", username.value)
                 intent.putExtra("score",score.value)
                 context.startActivity(intent)
