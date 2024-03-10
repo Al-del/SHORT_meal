@@ -10,14 +10,22 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.Card
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,10 +38,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
-import com.example.shortmeal.FoodPair
-import com.example.shortmeal.Profilus
-import com.example.shortmeal.Short_Meal_obj
-import com.example.shortmeal.USR
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -56,6 +60,7 @@ class Recepies : ComponentActivity() {
         super.onCreate(savedInstanceState)
         val param = intent.getStringExtra("recepie")
         val usernamuss = intent.getStringExtra("username")
+        val score= intent.getStringExtra("score")
         lifecycleScope.launch {
             val recipes = param?.let { ingredient ->
                 getRecipes(ingredient, this@Recepies)
@@ -135,6 +140,7 @@ class Recepies : ComponentActivity() {
 
                                         val intent = Intent(this@Recepies, Profilus::class.java)
                                         intent.putExtra("username", usernamuss)
+                                        intent.putExtra("score", score)
                                         this@Recepies.startActivity(intent)
                                     },
                                     modifier = Modifier.align(Alignment.TopEnd)
@@ -154,7 +160,7 @@ class Recepies : ComponentActivity() {
 suspend fun getRecipes(ingredient: String, context: Context): List<Recipe> = withContext(Dispatchers.IO) {
     val client = OkHttpClient()
     val request = Request.Builder()
-        .url("https://api.spoonacular.com/recipes/findByIngredients?ingredients=$ingredient&number=5&apiKey=5df674c4fc0242e38d2d0dd5cd94ffac")
+        .url("https://api.spoonacular.com/recipes/findByIngredients?ingredients=$ingredient&number=5&apiKey=3c917f1f66ff4481a374b8e68d4d9182")
         .build()
 
     try {
@@ -194,7 +200,7 @@ fun LoadImageFromUrl(url: String) {
 suspend fun getNutritionAnalysis(recipeId: String, context: Context): List<Pair<String, String>> = withContext(Dispatchers.IO){
     val client = OkHttpClient()
     val request = Request.Builder()
-            .url("https://api.spoonacular.com/recipes/$recipeId/nutritionWidget.json?apiKey=5df674c4fc0242e38d2d0dd5cd94ffac")
+            .url("https://api.spoonacular.com/recipes/$recipeId/nutritionWidget.json?apiKey=3c917f1f66ff4481a374b8e68d4d9182")
         .build()
 
     try {
@@ -219,29 +225,34 @@ suspend fun getNutritionAnalysis(recipeId: String, context: Context): List<Pair<
 }
 @Composable
 fun ShowNutritionAnalysis(nutritionAnalysis: List<Pair<String, String>>, navController: NavController,context: Context,usernamus:String,food:String,img_url: String,username:String?) {
-    Column {
-        for (nutrient in nutritionAnalysis) {
-            Text("${nutrient.first}: ${nutrient.second}")
-        }
+    Card(modifier = Modifier.padding(16.dp)) {
+        Column {
+            Button(onClick = {
+                val intent = Intent(context, Profilus::class.java)
+                intent.putExtra("username", username)
+                context.startActivity(intent)
+            }) {
+                Text("Back")
+            }
 
-        Button(onClick = {
-     //Go to Show_recipe
-            val intent = Intent(context, Profilus::class.java)
-            intent.putExtra("username", username)
-            context.startActivity(intent)
+            LazyColumn(modifier = Modifier.padding(16.dp)) {
+                items(nutritionAnalysis) { nutrient ->
+                    Text("${nutrient.first}: ${nutrient.second}", style = MaterialTheme.typography.h6, color = MaterialTheme.colors.onSurface)
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
 
-        }) {
-            Text(text ="Back")
-        }
-        Button(onClick = {
-           //Read from firebase Register/usernamer
-            val onj = getUserParameters(usernamus,food,img_url)
+                item {
+                    Spacer(modifier = Modifier.height(16.dp))
 
-        }) {
-            Text(text = "Add ${usernamus} to your list")
+                    FloatingActionButton(onClick = {
+                        val onj = getUserParameters(usernamus,food,img_url)
+                    }, modifier = Modifier.align(Alignment.CenterHorizontally)) {
+                        Icon(Icons.Filled.Add, contentDescription = "Add to list")
+                    }
+                }
+            }
         }
     }
-
 }
 fun getUserParameters(userName: String,foodus:String,img_url:String) {
     // Get a reference to the Firebase database

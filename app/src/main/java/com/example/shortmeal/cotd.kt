@@ -100,7 +100,8 @@ class cotd : ComponentActivity() {
                             onImageCaptured = ::handleImageCapture,
                             onError = { Log.e("kilo", "View error:", it) },
                             username= user_name,
-                            act=2
+                            act=2,
+                            score=""
                         )
                     }else{
                         CameraView(
@@ -109,7 +110,8 @@ class cotd : ComponentActivity() {
                             onImageCaptured = ::handleImageCapture,
                             onError = { Log.e("kilo", "View error:", it) },
                             username= "Cuza",
-                            act=2
+                            act=2,
+                            score=""
                         )
                     }
                 }

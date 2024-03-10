@@ -80,6 +80,7 @@ class Main : ComponentActivity() {
 
         requestCameraPermission()
         val user_name= intent.getStringExtra("username")
+        val score=intent.getStringExtra("score")
         outputDirectory = getOutputDirectory()
         cameraExecutor = Executors.newSingleThreadExecutor()
         if (cameraExecutor.isShutdown) {
@@ -89,23 +90,29 @@ class Main : ComponentActivity() {
             Column {
                 if (shouldShowCamera.value) {
                     if (user_name != null) {
-                        CameraView(
-                            outputDirectory = outputDirectory,
-                            executor = cameraExecutor,
-                            onImageCaptured = ::handleImageCapture,
-                            onError = { Log.e("kilo", "View error:", it) },
-                            username= user_name,
-                            act = 1
-                        )
+                        if (score != null) {
+                            CameraView(
+                                outputDirectory = outputDirectory,
+                                executor = cameraExecutor,
+                                onImageCaptured = ::handleImageCapture,
+                                onError = { Log.e("kilo", "View error:", it) },
+                                username= user_name,
+                                act = 1,
+                                score=score
+                            )
+                        }
                     }else{
-                        CameraView(
-                            outputDirectory = outputDirectory,
-                            executor = cameraExecutor,
-                            onImageCaptured = ::handleImageCapture,
-                            onError = { Log.e("kilo", "View error:", it) },
-                            username= "Cuza",
-                            act = 1
-                        )
+                        if (score != null) {
+                            CameraView(
+                                outputDirectory = outputDirectory,
+                                executor = cameraExecutor,
+                                onImageCaptured = ::handleImageCapture,
+                                onError = { Log.e("kilo", "View error:", it) },
+                                username= "Cuza",
+                                act = 1,
+                                score=score
+                            )
+                        }
                     }
                 }
 

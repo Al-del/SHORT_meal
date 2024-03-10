@@ -7,34 +7,15 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.example.shortmeal.ui.theme.SHORTMealTheme
-import androidx.activity.compose.BackHandler
-import androidx.activity.compose.setContent
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.DrawerValue
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import coil.compose.rememberImagePainter
 import kotlinx.coroutines.launch
-import java.io.File
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
-import androidx.navigation.compose.rememberNavController
+
 class Profilus : ComponentActivity() {
     var obj=Short_Meal_obj()
     var a = profil()
@@ -43,6 +24,7 @@ class Profilus : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val user_name= intent.getStringExtra("username")
+        val score=intent.getStringExtra("score")
         setContent {
             SHORTMealTheme {
                 // A surface container using the 'background' color from the theme
@@ -50,7 +32,9 @@ class Profilus : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    a.scor = 100
+                    if (score != null) {
+                        a.scor = score.toInt()
+                    }
                     a.name = user_name.toString()
                     a.posts = 10
                     a.imagine = R.drawable.cuza

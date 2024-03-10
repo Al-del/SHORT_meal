@@ -59,7 +59,8 @@ private fun takePhoto(
     onImageCaptured: (Uri) -> Unit,
     onError: (ImageCaptureException) -> Unit,
     user: String,
-    act:Int
+    act:Int,
+    score:String
 ) {
 
     val photoFile = File(
@@ -89,6 +90,7 @@ private fun takePhoto(
                 val intent = Intent(context, Recepies::class.java)
                 intent.putExtra("recepie", class_pred)
                 intent.putExtra("username", user)
+                intent.putExtra("score",score)
                 context.startActivity(intent)
             }
             else{
@@ -124,7 +126,8 @@ fun CameraView(
     onImageCaptured: (Uri) -> Unit,
     onError: (ImageCaptureException) -> Unit,
     username: String,
-    act:Int
+    act:Int,
+    score:String
 ) {
     // 1
     val lensFacing = CameraSelector.LENS_FACING_BACK
@@ -165,7 +168,8 @@ fun CameraView(
                     onImageCaptured = onImageCaptured,
                     onError = onError,
                     user=username,
-                    act=act
+                    act=act,
+                    score=score
                 )
             },
             content = {

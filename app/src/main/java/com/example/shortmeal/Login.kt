@@ -15,20 +15,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults.buttonColors
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuDefaults.textFieldColors
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -37,15 +29,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat.startActivity
 import com.google.firebase.Firebase
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -74,6 +63,9 @@ fun LoginScreen_(databaseReference: DatabaseReference,context:Context) {
     val password = remember { mutableStateOf("") }
     val loginSuccessful = remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
+    val score= remember {
+        mutableStateOf("")
+    }
     val passwordVisibility = remember { mutableStateOf(false) } // Add this line
     LaunchedEffect(loginSuccessful.value) {
         if (loginSuccessful.value) {
@@ -81,6 +73,7 @@ fun LoginScreen_(databaseReference: DatabaseReference,context:Context) {
                 Log.d("kilo", "Username ${username.value}")
                 val intent = Intent(context, Main::class.java)
                 intent.putExtra("username", username.value)
+                intent.putExtra("score",score.value)
                 context.startActivity(intent)
             }
         }
@@ -147,6 +140,7 @@ fun LoginScreen_(databaseReference: DatabaseReference,context:Context) {
                                     if(user?.password == password.value)
                                     {
                                         Log.d(TAG, "Login successful")
+                                        score.value= user.score.toString()
                                         loginSuccessful.value = true
 
                                     }

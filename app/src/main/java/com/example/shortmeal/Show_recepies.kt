@@ -132,7 +132,7 @@ fun FoodList(foodList: List<FoodPair>, lifecycleScope: LifecycleCoroutineScope,c
                             }
                             val obj_d=  withContext(Dispatchers.IO) {
                                 getSpoonacularRecipes(
-                                    "5df674c4fc0242e38d2d0dd5cd94ffac",
+                                    "3c917f1f66ff4481a374b8e68d4d9182",
                                     recipeUrl.toString(),
                                     recepie_Name = item.first
                                 )
