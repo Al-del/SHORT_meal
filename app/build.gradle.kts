@@ -94,6 +94,7 @@ dependencies {
     implementation(libs.tensorflow.lite.gpu)
     implementation(platform(libs.compose.bom))
     implementation(platform(libs.compose.bom))
+    implementation(libs.firebase.storage.ktx)
     testImplementation(libs.junit)
     implementation("androidx.compose.material:material:1.0.5")
     androidTestImplementation(libs.androidx.test.ext.junit)
